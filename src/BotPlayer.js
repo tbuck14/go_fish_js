@@ -1,0 +1,2 @@
+class BotPlayer extends Player {
+}

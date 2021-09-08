@@ -1,12 +1,11 @@
 class LoginView {
   constructor(onLogin) {
-    this.onLogin = onLogin
+    this._onLogin = onLogin
   }
 
   onSubmit(event) {
     event.preventDefault()
-    debugger
-    this.onLogin(event.target.name.value)
+    this._onLogin(event.target.name.value)
   }
 
   nameInput() {
@@ -29,5 +28,6 @@ class LoginView {
     element.innerHTML = formMarkup
     element.onsubmit = this.onSubmit.bind(this)
     container.appendChild(element)
+    return element
   }
 }

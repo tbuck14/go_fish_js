@@ -5,7 +5,7 @@ describe('LoginView', () => {
       const onLogin = (name) => { calledWith = name }
       const view = new LoginView(onLogin)
       const container = document.createElement('div')
-      const name = 'Bob Kratchet'
+      const name = 'Bob Cratchit'
       document.body.appendChild(container)
       view.draw(container)
       view.nameInput().value = name
