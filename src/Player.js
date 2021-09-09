@@ -12,11 +12,17 @@ class Player {
     return this._hand
   }
 
-  cards_left() {
+  cardsLeft() {
     return this.hand().length
   }
 
   addCardsToHand(cards_to_add) {
     this._hand = this.hand().concat(cards_to_add)
+  }
+
+  takeCards(rank) {
+    const cardsToReturn = this.hand().filter((card) => card.rank() == rank)
+    this._hand = this.hand().filter((card) => card.rank() != rank)
+    return cardsToReturn
   }
 }

@@ -5,21 +5,21 @@ describe('Deck', () => {
     expect(deck.cards()).toEqual(cards)
   })
 
-  describe('#cards_left', () => {
+  describe('#cardsLeft', () => {
     it('returns the number of cards in the deck', () => {
       const cards = [new Card('A', 'S'),new Card('6', 'D'),new Card('2', 'C'),new Card('9', 'H')]
       const deck = new Deck(cards)
-      expect(deck.cards_left()).toEqual(4)
+      expect(deck.cardsLeft()).toEqual(4)
     })
   })
-
+  
   describe('#deal', () => {
     it('removes a card from the deck and returns it', () => {
       const cards = [new Card('A', 'S'),new Card('6', 'D'),new Card('2', 'C'),new Card('9', 'H')]
       const deck = new Deck(cards)
       const card = deck.deal()
-      expect(card).toEqual(new Card('9', 'H'))
-      expect(deck.cards_left()).toEqual(3)
+      expect(card).toEqual([new Card('9', 'H')])
+      expect(deck.cardsLeft()).toEqual(3)
     })
   })
 
@@ -36,7 +36,7 @@ describe('Deck', () => {
     it('builds a deck of 52 cards', () => {
       const deck = new Deck()
       deck.build()
-      expect(deck.cards_left()).toEqual(52)
+      expect(deck.cardsLeft()).toEqual(52)
     })
   })
 

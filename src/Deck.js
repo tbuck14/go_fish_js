@@ -7,12 +7,16 @@ class Deck {
     return this._cards
   }
 
-  cards_left() {
+  cardsLeft() {
     return this.cards().length
   }
 
   deal() {
-    return this.cards().pop()
+    let card = [this.cards().pop()]
+    if(card[0] == undefined){
+      card = []
+    }
+    return card
   }
 
   shuffle() {
