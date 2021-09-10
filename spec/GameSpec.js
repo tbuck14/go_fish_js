@@ -41,11 +41,73 @@ describe('Game', () => {
   describe('#playerGoFish', () => {
     it('removes a card from the deck and adds it to a players hand', () => {
       const player = new Player('trevor')
-      const game = new Game([player])
+      const game = new Game([player, new Player('stephen')])
       game.start()
       expect(player.cardsLeft()).toEqual(5)
       game.playerGoFish(player)
       expect(player.cardsLeft()).toEqual(6)
+    })
+  })
+
+  describe('#nextTurn', () => {
+    it('increments the turn counter and takes bot turns automatically', () => {
+      const player = new Player('trevor')
+      const game = new Game([player])
+      expect(game.turnCount()).toEqual(0)
+      game.nextTurn()
+      //should equal 4 because there are 3 bots in the game
+      expect(game.turnCount()).toEqual(4)
+    })
+  })
+
+  describe('#turnPlayer', () => {
+    it('returns the player whos turn it is', () => {
+      const player1 = new Player('trevor')
+      const player2 = new Player('connor')
+      const game = new Game([player1, player2])
+      expect(game.turnPlayer()).toEqual(player1)
+      game.nextTurn()
+      expect(game.turnPlayer()).toEqual(player2)
+    })
+  })
+
+  describe('#playTurn', () => {
+    it('allows the player to go fish if they did not get the card asked for', () => {
+      const player1 = new Player('trevor', [new Card('6', 'H')])
+      const player2 = new Player('connor',[new Card('7', 'C')])
+      const deck = new Deck([new Card('2', 'D')])
+      const game = new Game([player1, player2],deck,0)
+      game.playTurn('connor', '6')
+      expect(player1.hand()).toEqual([new Card('6', 'H'),new Card('2', 'D')])
+      expect(player2.hand()).toEqual([new Card('7', 'C')])
+    })
+
+    it('awards the player the card if they ask correctly', () => {
+      const player1 = new Player('trevor', [new Card('7', 'H')])
+      const player2 = new Player('connor',[new Card('7', 'C')])
+      const deck = new Deck([new Card('2', 'D'),new Card('2', 'D')])
+      const game = new Game([player1, player2],deck,0)
+      game.playTurn('connor', '7')
+      expect(player1.hand()).toEqual([new Card('7', 'H'),new Card('7', 'C')])
+      expect(player2.hand()).toEqual([])
+    })
+
+    it('increments the turn count if they went fishing', () => {
+      const player1 = new Player('trevor', [new Card('6', 'H')])
+      const player2 = new Player('connor',[new Card('7', 'C')])
+      const deck = new Deck([new Card('2', 'D'),new Card('2', 'D')])
+      const game = new Game([player1, player2],deck,0)
+      game.playTurn('connor', '6')
+      expect(game.turnPlayer()).toEqual(player2)
+    })
+
+    it('allows them to have multiple turns if they guessed correctly', () => {
+      const player1 = new Player('trevor', [new Card('7', 'H'),new Card('5', 'H')])
+      const player2 = new Player('connor',[new Card('7', 'C'),new Card('5', 'D')])
+      const deck = new Deck([new Card('2', 'D'),new Card('2', 'D')])
+      const game = new Game([player1, player2],deck,0)
+      game.playTurn('connor', '5')
+      expect(game.turnPlayer()).toEqual(player1)
     })
   })
 

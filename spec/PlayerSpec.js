@@ -38,6 +38,45 @@ describe('Player', () => {
     })
   })
 
+  describe('#increaseScore', () => {
+    it('increases a players score by 1', () => {
+      const player = new Player('trevor')
+      expect(player.score()).toEqual(0)
+      player.increaseScore()
+      expect(player.score()).toEqual(1)
+    })
+  })
+
+  describe('#tryToLayBook', () => {
+    it('removes a book from a players hand if they have one', () => {
+      const cards = [new Card('A','C'),new Card('A','C'),new Card('A','C'),new Card('A','C')]
+      const player = new Player('trevor',cards)
+      player.tryToLayBook()
+      expect(player.cardsLeft()).toEqual(0)
+    })
+
+    it('doesnt remove any cards if the player does not have a book', () => {
+      const cards = [new Card('A','C'),new Card('A','C'),new Card('A','C'),new Card('J','C')]
+      const player = new Player('trevor',cards)
+      player.tryToLayBook()
+      expect(player.cardsLeft()).toEqual(4)
+    })
+
+    it('will lay multiple books if the player has multiple', () => {
+      const cards = [new Card('A','C'),new Card('A','C'),new Card('A','C'),new Card('A','C'),new Card('J','C'),new Card('J','C'),new Card('J','C'),new Card('J','C')]
+      const player = new Player('trevor',cards)
+      player.tryToLayBook()
+      expect(player.cardsLeft()).toEqual(0)
+    })
+
+    it('increase a players score when they lay a book', () => {
+      const cards = [new Card('A','C'),new Card('A','C'),new Card('A','C'),new Card('A','C'),new Card('J','C'),new Card('J','C'),new Card('J','C'),new Card('J','C')]
+      const player = new Player('trevor',cards)
+      player.tryToLayBook()
+      expect(player.score()).toEqual(2)
+    })
+  })
+
   describe('#method_name', () => {
     it('', () => {
 

@@ -14,5 +14,17 @@ describe('LoginView', () => {
       expect(calledWith).toEqual(name)
       container.remove()
     })
+
+    it('does not allow a blank name', () => {
+      const view = new LoginView( () => {} )
+      const container = document.createElement('div')
+      document.body.appendChild(container)
+      view.draw(container)
+      view.submitButton().click()
+
+      expect(view.nameInput().checkValidity()).toEqual(false)
+      expect(document.body.innerHTML).not.toContain('Game Page')
+      container.remove()
+    })
   })
 })

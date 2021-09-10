@@ -1,22 +1,31 @@
 class GameView {
-  constructor(game) {
+  constructor(game, reDraw = () => {} ) {
     this._game = game
+    this._reDraw = reDraw
   }
 
   game() {
     return this._game
   }
 
-  container() {
-    return document.getElementById('main')
-  }
-
   onSubmit(event) {
     event.preventDefault()
     const playerAsked = event.target.player.value
     const rankAsked = event.target.card.value
-    this.game().playRound(playerAsked, rankAsked)
-    this.draw(this.container())
+    this.game().playTurn(playerAsked, rankAsked)
+    this._reDraw(this)
+  }
+
+  playerSelect() {
+    return document.getElementById('player')
+  }
+
+  cardSelect() {
+    return document.getElementById('card')
+  }
+
+  submitButton() {
+    return document.getElementById('submit')
   }
 
   draw(container) {
@@ -24,7 +33,7 @@ class GameView {
       <h1>Game Page</h1>
       <h3>Players:</h3>
       <ul>
-        ${this.game().players().map( player => `<li>${player.name()} (cards: ${player.cardsLeft()})</li>`).join('')}
+        ${this.game().players().map( player => `<li>${player.name()} (cards: ${player.cardsLeft()})(score: ${player.score()})(hand: ${player.hand().map(card => card.rank())})</li>`).join('')}
       </ul>
       <div id="cards"></div>
       <div id="turn-selection"></div>
