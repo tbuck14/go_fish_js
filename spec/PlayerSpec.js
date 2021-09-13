@@ -76,10 +76,4 @@ describe('Player', () => {
       expect(player.score()).toEqual(2)
     })
   })
-
-  describe('#method_name', () => {
-    it('', () => {
-
-    })
-  })
 })

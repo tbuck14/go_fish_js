@@ -47,6 +47,14 @@ describe('Game', () => {
       game.playerGoFish()
       expect(player.cardsLeft()).toEqual(6)
     })
+
+    it('adds information to the round results array to show what you fished from the deck', () => {
+      const player = new Player('trevor', [new Card('J','C')])
+      const game = new Game([player, new Player('stephen')],new Deck([new Card('A','H')]),0)
+      game.playTurn('stephen', 'J')
+      game.playerGoFish()
+      expect(game.roundResults()[0]).toContain(' and got a A from the deck')
+    })
   })
 
   describe('#nextTurn', () => {
@@ -160,9 +168,26 @@ describe('Game', () => {
     })
   })
 
-  describe('#method_name', () => {
-    it('', () => {
+  describe('#updateRoundResults', () => {
+    it('records what a player asked for', () => {
+      const player1 = new Player('trevor')
+      const game = new Game([player1])
+      game.updateRoundResults([1,2,3],'bob','A')
+      expect(game.roundResults()[0]).toContain('trevor asked bob for a A')
+    })
 
+    it('tells how many cards a player recieved', () => {
+      const player1 = new Player('trevor')
+      const game = new Game([player1])
+      game.updateRoundResults([1,2,3],'bob','A')
+      expect(game.roundResults()[0]).toContain('and got (3)')
+    })
+
+    it('does not say that the player got 0 cards', () => {
+      const player1 = new Player('trevor')
+      const game = new Game([player1])
+      game.updateRoundResults([],'bob','A')
+      expect(game.roundResults()[0]).not.toContain('and got (0)')
     })
   })
 })

@@ -37,6 +37,9 @@ class Player {
   takeCards(rank) {
     const cardsToReturn = this.hand().filter((card) => card.rank() == rank)
     this._hand = this.hand().filter((card) => card.rank() != rank)
+    if(this.cardsLeft() > 1){
+      this._hand.sort((a,b) => a.value() - b.value())
+    }
     return cardsToReturn
   }
 

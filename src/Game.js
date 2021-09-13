@@ -4,6 +4,7 @@ class Game {
     this._players = players
     this._deck = deck
     this._turnCount = 0
+    this._roundResults = []
     this.addBots(numberOfBots)
   }
 
@@ -19,12 +20,17 @@ class Game {
     return this._players[0]
   }
 
+  roundResults() {
+    return this._roundResults
+  }
+
   turnPlayer() {
     return this.players()[this.turnCount() % this.players().length]
   }
 
-  playTurn(playerAsked, RankAsked) {
-    const cardsAwarded = this.findPlayerByName(playerAsked).takeCards(RankAsked)
+  playTurn(playerAsked, rankAsked) {
+    const cardsAwarded = this.findPlayerByName(playerAsked).takeCards(rankAsked)
+    this.updateRoundResults(cardsAwarded, playerAsked, rankAsked)
     if(cardsAwarded.length > 0) {
       this.turnPlayer().addCardsToHand(cardsAwarded)
       this.botMakeGuess()
@@ -32,6 +38,18 @@ class Game {
     else {
       this.playerGoFish()
     }
+  }
+
+  updateRoundResults(cardsAwarded, playerAsked, rankAsked) {
+    const guessInfo = `${this.turnPlayer().name()} asked ${playerAsked} for a ${rankAsked}`
+    let cardsWon = ``
+    if(cardsAwarded.length > 0) {
+      cardsWon = ` and got (${cardsAwarded.length})`
+    }
+    if(this._roundResults.length > 9){
+      this._roundResults.shift()
+    }
+    this._roundResults.push(guessInfo + cardsWon )
   }
 
   nextTurn() {
@@ -62,7 +80,11 @@ class Game {
   }
 
   playerGoFish() {
-    this.turnPlayer().addCardsToHand(this.deck().deal())
+    const cardFromDeck = this.deck().deal()
+    this.turnPlayer().addCardsToHand(cardFromDeck)
+    if(cardFromDeck.length > 0 && this.turnPlayer().bot() == false){
+      this._roundResults[this.roundResults().length - 1] += ` and got a ${cardFromDeck[0].rank()} from the deck`
+    }
     this.nextTurn()
   }
 

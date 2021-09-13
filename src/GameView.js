@@ -43,8 +43,9 @@ class GameView {
       <h1>Game Page</h1>
       <h3>Players:</h3>
       <ul>
-        ${this.game().players().map( player => `<li>${player.name()} (cards: ${player.cardsLeft()})(score: ${player.score()})(hand: ${player.hand().map(card => card.rank())})</li>`).join('')}
+        ${this.game().players().map( player => `<li>${player.name()} (cards: ${player.cardsLeft()})(score: ${player.score()})</li>`).join('')}
       </ul>
+      <h3>Cards In Deck: ${this.game().deck().cardsLeft()}</h3>
       <div id="cards"></div>
       <div id="turn-selection"></div>
       <div id="round-results"></div>
@@ -56,6 +57,7 @@ class GameView {
 
     this.drawCards()
     this.drawTurnForm()
+    this.drawRoundResults()
 
     return element
   }
@@ -93,6 +95,24 @@ class GameView {
       </form>
     `
     const container = document.getElementById('turn-selection')
+    const element = document.createElement('div')
+    element.innerHTML = markup
+    element.onsubmit = this.onSubmit.bind(this)
+    container.innerHTML = ''
+    container.appendChild(element)
+
+    return element
+  }
+
+  drawRoundResults() {
+    const results = this.game().roundResults()
+    const markup = `
+      <h3>Game Log:</h3>
+      <ul>
+        ${results.map((result) => `<li>${result}</li>`).join('')}
+      </ul>
+    `
+    const container = document.getElementById('round-results')
     const element = document.createElement('div')
     element.innerHTML = markup
     element.onsubmit = this.onSubmit.bind(this)

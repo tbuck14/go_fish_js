@@ -29,7 +29,22 @@ describe('GameView', () => {
   })
 
   describe('showing the turn form', () => {
+    it('allows you to select a card and player', () => {
+      const players = [new Player('Trevor', [new Card('A', 'H')]), new Player('Connor')]
+      const game = new Game(players)
+      const view = new GameView(game)
+      const container = document.createElement('div')
+      document.body.appendChild(container)
+      view.draw(container)
 
+      view.playerSelect().value = 'Connor'
+      view.cardSelect().value = 'A'
+      view.submitButton().click()
+
+      expect(game.roundResults()[0]).toContain('Trevor asked Connor for a A')
+
+      container.remove()
+    })
   })
 
   describe('#onLoad', () => {

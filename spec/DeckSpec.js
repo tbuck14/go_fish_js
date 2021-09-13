@@ -12,7 +12,7 @@ describe('Deck', () => {
       expect(deck.cardsLeft()).toEqual(4)
     })
   })
-  
+
   describe('#deal', () => {
     it('removes a card from the deck and returns it', () => {
       const cards = [new Card('A', 'S'),new Card('6', 'D'),new Card('2', 'C'),new Card('9', 'H')]
@@ -37,12 +37,6 @@ describe('Deck', () => {
       const deck = new Deck()
       deck.build()
       expect(deck.cardsLeft()).toEqual(52)
-    })
-  })
-
-  describe('#method_name', () => {
-    it('', () => {
-
     })
   })
 })
