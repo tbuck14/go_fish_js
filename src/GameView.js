@@ -13,7 +13,17 @@ class GameView {
     const playerAsked = event.target.player.value
     const rankAsked = event.target.card.value
     this.game().playTurn(playerAsked, rankAsked)
-    this._reDraw(this)
+    if(this.game().over()){
+      this.gameOver()
+    } else {
+      this._reDraw(this)
+    }
+  }
+
+  gameOver() {
+    const container = document.getElementById('main')
+    const view = new GameOverView(this.game())
+    view.draw(container)
   }
 
   playerSelect() {

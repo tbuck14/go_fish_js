@@ -6,7 +6,7 @@ class Game {
     this._turnCount = 0
     this.addBots(numberOfBots)
   }
-  
+
   turnCount() {
     return this._turnCount
   }
@@ -30,28 +30,39 @@ class Game {
       this.botMakeGuess()
     }
     else {
-      this.playerGoFish(this.turnPlayer())
+      this.playerGoFish()
     }
   }
 
   nextTurn() {
+    if(this.over()){return 'game over'}
     this._turnCount += 1
-    this.botMakeGuess()
+    if(this.turnPlayer().cardsLeft() > 0){
+      this.botMakeGuess()
+    } else {
+      this.playerGoFish()
+    }
+  }
+
+  winners() {
+    let winners = []
+    let sortPlayers = this.players().sort((a, b) => a.score() - b.score())
+    if(sortPlayers[sortPlayers.length - 1].score() != 0){
+      winners.push(sortPlayers.pop())
+      sortPlayers.forEach( (player) => { if(player.score() == winners[0].score()) { winners.push(player) } })
+    }
+    return winners
   }
 
   botMakeGuess() {
     if(this.turnPlayer().bot() == true){
-      if(this.turnPlayer().cardsLeft() > 0) {
-        const guess = this.turnPlayer().makeGuess(this.players())
-        this.playTurn(...guess)
-      } else {
-        this.playerGoFish(this.turnPlayer())
-      }
+      const guess = this.turnPlayer().makeGuess(this.players())
+      this.playTurn(...guess)
     }
   }
 
-  playerGoFish(player) {
-    player.addCardsToHand(this.deck().deal())
+  playerGoFish() {
+    this.turnPlayer().addCardsToHand(this.deck().deal())
     this.nextTurn()
   }
 
@@ -65,6 +76,12 @@ class Game {
 
   start() {
     this.dealCards()
+  }
+
+  over() {
+    let total = 0
+    this.players().forEach( player => total += player.score())
+    return total == ranks.length
   }
 
   addBots(numberOfBots) {

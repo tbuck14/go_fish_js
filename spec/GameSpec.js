@@ -44,19 +44,28 @@ describe('Game', () => {
       const game = new Game([player, new Player('stephen')])
       game.start()
       expect(player.cardsLeft()).toEqual(5)
-      game.playerGoFish(player)
+      game.playerGoFish()
       expect(player.cardsLeft()).toEqual(6)
     })
   })
 
   describe('#nextTurn', () => {
     it('increments the turn counter and takes bot turns automatically', () => {
-      const player = new Player('trevor')
+      const player = new Player('trevor',['A', 'H'])
       const game = new Game([player])
       expect(game.turnCount()).toEqual(0)
       game.nextTurn()
       //should equal 4 because there are 3 bots in the game
       expect(game.turnCount()).toEqual(4)
+    })
+
+    it('skips a players turn if they are out of cards', () => {
+      const player1 = new Player('trevor',[new Card('A', 'H')])
+      const player2 = new Player('connor', [])
+      const game = new Game([player1, player2])
+      expect(game.turnPlayer()).toEqual(player1)
+      game.nextTurn()
+      expect(game.turnPlayer()).not.toEqual(player2)
     })
   })
 
@@ -65,6 +74,7 @@ describe('Game', () => {
       const player1 = new Player('trevor')
       const player2 = new Player('connor')
       const game = new Game([player1, player2])
+      game.start()
       expect(game.turnPlayer()).toEqual(player1)
       game.nextTurn()
       expect(game.turnPlayer()).toEqual(player2)
@@ -108,6 +118,45 @@ describe('Game', () => {
       const game = new Game([player1, player2],deck,0)
       game.playTurn('connor', '5')
       expect(game.turnPlayer()).toEqual(player1)
+    })
+  })
+
+  describe('#over', () => {
+    it('returns true if all the books have been layed', () => {
+      const player1 = new Player('trevor')
+      const game = new Game([player1])
+      Array.from(Array(13)).forEach( () => player1.increaseScore())
+      expect(game.over()).toEqual(true)
+    })
+
+    it('returns false if not all the books have been layed', () => {
+      const player1 = new Player('trevor')
+      const game = new Game([player1])
+      expect(game.over()).toEqual(false)
+    })
+  })
+
+  describe('#winners', () => {
+    it('returns empty array if no winner', () => {
+      const player1 = new Player('trevor')
+      const game = new Game([player1])
+      expect(game.winners().length).toEqual(0)
+    })
+
+    it('returns a single winning player in an array', () => {
+      const player1 = new Player('trevor')
+      player1.increaseScore()
+      const game = new Game([player1])
+      expect(game.winners()[0]).toEqual(player1)
+    })
+
+    it('returns an array of multiple players with the same ending score', () => {
+      const player1 = new Player('trevor')
+      player1.increaseScore()
+      const player2 = new Player('trevor')
+      player2.increaseScore()
+      const game = new Game([player1, player2])
+      expect(game.winners()).toEqual([player1, player2])
     })
   })
 

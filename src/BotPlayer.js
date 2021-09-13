@@ -1,7 +1,11 @@
 class BotPlayer extends Player {
   makeGuess(players) {
     const askablePlayers = players.filter(player => player != this)
-    return [askablePlayers[0].name(), this.hand()[0].rank()]
+    return [askablePlayers[this.getRandomInt(askablePlayers.length)].name(), this.hand()[this.getRandomInt(this.hand().length)].rank()]
+  }
+
+  getRandomInt(max) {
+    return Math.floor(Math.random() * max)
   }
 
   bot() {

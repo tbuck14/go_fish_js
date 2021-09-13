@@ -29,7 +29,7 @@ describe('GameView', () => {
   })
 
   describe('showing the turn form', () => {
-    
+
   })
 
   describe('#onLoad', () => {
@@ -53,6 +53,24 @@ describe('GameView', () => {
       //calls the passed in function for re-drawing the view
       expect(testview).toEqual('refreshed view!')
 
+      container.remove()
+    })
+  })
+
+  describe('#gameOver', () => {
+    it('draws the game over page', () => {
+      const player = new Player('Trevor')
+      player.increaseScore()
+      const game = new Game([player])
+      const view = new GameView(game, () => {})
+      const container = document.createElement('div')
+      document.body.appendChild(container)
+      // view.draw(container)
+      expect(document.body.innerHTML).not.toContain('Game Over')
+      // view.gameOver()
+      // expect(document.body.innerHTML).toContain('Game Over')
+      // expect(document.body.innerHTML).toContain('Winner:')
+      // expect(document.body.innerHTML).toContain('Trevor, Score: 1')
       container.remove()
     })
   })
